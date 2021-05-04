@@ -1,3 +1,4 @@
+id,question_body,question_date,asker_name,question_email,reported,helpfulness
 1,What fabric is the top made of?,1595884714409,yankeelover,first.last@gmail.com,0,1
 1,HEY THIS IS A WEIRD QUESTION!!!!!!?,1613888219613,jbilas,first.last@gmail.com,1,4
 1,Does this product run big or small?,1608535907083,jbilas,first.last@gmail.com,0,8
