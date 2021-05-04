@@ -1,50 +1,65 @@
 module.exports = [
   {
-    '0': '1',
-    '1': '4',
-    'What fabric is the top made of?': 'HEY THIS IS A WEIRD QUESTION!!!!!!?',
-    '1595884714409': '1613888219613',
-    yankeelover: 'jbilas',
-    'first.last@gmail.com': 'first.last@gmail.com'
+    id: '1',
+    question_body: 'What fabric is the top made of?',
+    question_date: '1595884714409',
+    asker_name: 'yankeelover',
+    question_email: 'first.last@gmail.com',
+    reported: '0',
+    helpfulness: '1'
   },
   {
-    '0': '0',
-    '1': '8',
-    'What fabric is the top made of?': 'Does this product run big or small?',
-    '1595884714409': '1608535907083',
-    yankeelover: 'jbilas',
-    'first.last@gmail.com': 'first.last@gmail.com'
+    id: '1',
+    question_body: 'HEY THIS IS A WEIRD QUESTION!!!!!!?',
+    question_date: '1613888219613',
+    asker_name: 'jbilas',
+    question_email: 'first.last@gmail.com',
+    reported: '1',
+    helpfulness: '4'
   },
   {
-    '0': '0',
-    '1': '12',
-    'What fabric is the top made of?': 'Nithi laksjd htien alskdj hieor',
-    '1595884714409': '1606494332700',
-    yankeelover: 'Hanna_Schmitt83',
-    'first.last@gmail.com': 'Tiana_Crooks84@gmail.com'
+    id: '1',
+    question_body: 'Does this product run big or small?',
+    question_date: '1608535907083',
+    asker_name: 'jbilas',
+    question_email: 'first.last@gmail.com',
+    reported: '0',
+    helpfulness: '8'
   },
   {
-    '0': '0',
-    '1': '12',
-    'What fabric is the top made of?': 'corrypt kjls itjlksdf lsksd kdsllk.',
-    '1595884714409': '2020-06-03T02:03:23:362Z',
-    yankeelover: 'Percy_Hahn',
-    'first.last@gmail.com': 'Tobin_Sawayn@hotmail.com'
+    id: '153',
+    question_body: 'Nithi laksjd htien alskdj hieor',
+    question_date: '1606494332700',
+    asker_name: 'Hanna_Schmitt83',
+    question_email: 'Tiana_Crooks84@gmail.com',
+    reported: '0',
+    helpfulness: '12'
   },
   {
-    '0': '0',
-    '1': '17',
-    'What fabric is the top made of?': '                 1608266467489',
-    '1595884714409': '1613888219613',
-    yankeelover: 'Juliana72',
-    'first.last@gmail.com': 'Vita_Hettinger58@gmail.com'
+    id: '155',
+    question_body: 'corrypt kjls itjlksdf lsksd kdsllk.',
+    question_date: '2020-06-03T02:03:23:362Z',
+    asker_name: 'Percy_Hahn',
+    question_email: 'Tobin_Sawayn@hotmail.com',
+    reported: '0',
+    helpfulness: '12'
   },
   {
-    '0': '0',
-    '1': '15',
-    'What fabric is the top made of?': 'Rerumlkj lkasjd lkasjdas lkajsdasd lkasjds',
-    '1595884714409': 'Wed Sep 09 2020 01:24:55:00',
-    yankeelover: 'random',
-    'first.last@gmail.com': 'Geovanni.Gordon67@gmail.com'
+    id: '33',
+    question_body: '1608266467489',
+    question_date: '1613888219613',
+    asker_name: 'Juliana72',
+    question_email: 'Vita_Hettinger58@gmail.com',
+    reported: '0',
+    helpfulness: '17'
+  },
+  {
+    id: '32',
+    question_body: 'Rerumlkj lkasjd lkasjdas lkajsdasd lkasjds',
+    question_date: 'Wed Sep 09 2020 01:24:55:00',
+    asker_name: 'random',
+    question_email: 'Geovanni.Gordon67@gmail.com',
+    reported: '0',
+    helpfulness: '15'
   }
 ];
