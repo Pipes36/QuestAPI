@@ -1,11 +1,17 @@
+const transform = require('./transform.js');
+
 const parseQuestion = (question = {}) => {
-  // id STRING => INTEGER will become question_id
-  // product_id STRING
-  // body STRING will become question_body
-  // date_written STRING||DATE => Date can be null? becomes question_date
-  // asker_name STRING,
-  // REPORTED STRING 0||1||null? => boolean,
-  // helpful STRING => INTEGER, question_helpfulness
+  if (!question.body) return {};
+  return {
+    'question_id': transform.questionID(question.id),
+    'product_id': transform.productID(question['product_id']),
+    'question_body': transform.questionBody(question.body),
+    'question_date': transform.questionDate(question['date_written']),
+    'asker_name': transform.askerName(question['asker_name']),
+    'asker_email': transform.askerEmail(question['asker_email']),
+    reported: transform.reported(question.reported),
+    'question_helpfulness': transform.questionHelpfulness(question.helpful)
+  };
 };
 
-export default parseQuestion;
+module.exports =  parseQuestion;

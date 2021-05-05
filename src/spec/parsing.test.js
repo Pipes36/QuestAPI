@@ -5,8 +5,9 @@ const fs = require('fs');
 const parse = require('csv-parse');
 const parseAnswer = require('../csvParse/parseAnswer.js');
 const parsePhoto = require('../csvParse/parsePhoto.js');
+const parseQuestion = require('../csvParse/parseQuestion.js');
 
-describe('Parsing CSV', () => {
+xdescribe('Parsing CSV', () => {
   let testFilePath;
   beforeEach(() => {
     testFilePath = path.join(__dirname, '../dummyData');
@@ -88,7 +89,6 @@ describe('Parsing CSV', () => {
   });
 
   describe('parseCSV Load Testing', () => {
-
     test('should parse CSV of 100 rows', (done) => {
       const callback = (err, results) => {
         try {
@@ -122,13 +122,8 @@ describe('Parsing CSV', () => {
   });
 });
 
-describe('parseQuestion', () => {
-  const parseQuestion;
+xdescribe('parseQuestion', () => {
   let question;
-
-  before(() => {
-    parseQuestion =  require('../csvParse/parseQuestion.js');
-  });
 
   beforeEach(() => {
     question = {
@@ -139,79 +134,419 @@ describe('parseQuestion', () => {
       asker_name: 'yankeelover',
       asker_email: 'first.last@gmail.com',
       reported: '0',
-      helpful: '1';
+      helpful: '1'
     }
-  });
 
-  test('should throw an error if it does not have an id', () => {
-    expect(parseQuestion(Object.assign(question, { id: null }))).toThrow();
-  });
-
-  // Should change id into question_id
-
-  test('should transform id from a string to an integer', () => {
-    expect(parseQuestion(question)).toHaveProperty('question_id', 1);
   });
 
   // PROPERTIES TO EXIST
   // question_id must exist as Integer
-  // product_id must exist as String but also a valid number
-  // question_body must exist as String
-  // asker_name must exist as String
-  // question_date must exist as Date
-  // reported must exist as Boolean
-  // question_helpfulness must exist as Integer
+  test('should output question_id as an Integer', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('question_id', 1);
+    expect(typeof result['question_id']).toBe('number');
+  });
 
+  // product_id must exist as String but also a valid number
+  test('should output product_id property and an Integer', () => {
+    expect(parseQuestion(question)).toHaveProperty('product_id', '1');
+    const newCSV = {...question, 'product_id': '2223'};
+    const newObj = parseQuestion(newCSV);
+    expect(newObj).toHaveProperty('product_id', '2223');
+    expect(typeof newObj['product_id']).toBe('string');
+  });
+  // asker_name must exist as String
+  test('should output asker_name as String', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('asker_name', 'yankeelover');
+    expect(typeof result['asker_name']).toBe('string');
+  });
+  // question_body must exist as String
+  test('should output property question_body as String', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('question_body', 'what fabric is the top made of?');
+    expect(typeof result['question_body']).toBe('string');
+  });
+
+  // question_date must exist as Date
+  test('should output question_date in Date format', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('question_date');
+    expect(result['question_date']).toBeInstanceOf(Date);
+  });
+
+  test('should output current date if given no date', () => {
+    const result = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '1',
+      helpful: '1'
+    });
+    expect(result['question_date']).toBeInstanceOf(Date);
+  });
+
+  test('should contain an asker_email property when given', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('asker_email', 'first.last@gmail.com')
+  });
+
+  test('should give empty string if given no asker_email', () => {
+    const result = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '',
+      asker_name: 'yankeelover',
+      asker_email: '',
+      reported: '1',
+      helpful: '1'
+    });
+    expect(result).toHaveProperty('asker_email', '');
+  });
+
+  // reported must exist as Boolean
+  test('should output reported as a Boolean', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('reported');
+    expect(typeof result.reported).toBe('boolean');
+  });
+  // question_helpfulness must exist as Integer
+  test('should output question_helpfulness as an Integer', () => {
+    const result = parseQuestion(question);
+    expect(result).toHaveProperty('question_helpfulness', 1);
+    expect(typeof result['question_helpfulness']).toBe('number');
+  });
 
   // when no body, returns an empty object
+  test('should output an empty object if given no body', () => {
+    const noBody = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: '',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '0',
+      helpful: '1'
+    });
+    expect(noBody).toEqual({});
+  });
 
   // when given an empty asker_name, will turn into 'User'
+  test('should output User for asker_name if given no asker_name', () => {
+    const noAskerName = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasdasd',
+      date_written: '1595884714409',
+      asker_name: '',
+      asker_email: 'first.last@gmail.com',
+      reported: '0',
+      helpful: '1'
+    });
+    expect(noAskerName).toHaveProperty('asker_name', 'User');
+  });
 
   // should have reported, which when given nothing becomes false
+  test('should output reported as false when given no value', () => {
+    const noReported = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '',
+      helpful: '1'
+    });
+    expect(noReported).toHaveProperty('reported', false);
+  });
 
   // reported when given a '1' becomes true
+  test('should output reported as true when given 1', () => {
+    const reportedOne = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '1',
+      helpful: '1'
+    });
+    expect(reportedOne).toHaveProperty('reported', true);
+  });
 
   // reported when given a '0' becomes false
+  test('should output reported as false when given 0', () => {
+    const reportedZero = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '0',
+      helpful: '1'
+    });
+    expect(reportedZero).toHaveProperty('reported', false);
+  });
 
   // question_helpfulness will be 0 when given nothing
+  test('should output question_helpfulness as a default of 0 when no value is given', () => {
+    const noHelpful = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '0',
+      helpful: ''
+    });
+    expect(noHelpful).toHaveProperty('question_helpfulness', 0);
+  });
 
   // question_helpfulness becomes an Integer when given a string representation
-
+  test('should output question_helpfulness as an Integer when given a value', () => {
+    const helpful = parseQuestion({
+      id: '1',
+      product_id: '1',
+      body: 'asdasdasd',
+      date_written: '1595884714409',
+      asker_name: 'yankeelover',
+      asker_email: 'first.last@gmail.com',
+      reported: '0',
+      helpful: '22'
+    });
+    expect(helpful).toHaveProperty('question_helpfulness', 22);
+    expect(typeof helpful['question_helpfulness']).toBe('number');
+  });
 });
 
 describe('parseAnswer', () => {
-
+  let answer;
+  beforeEach(() => {
+    answer = {
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '4'
+    }
+  });
   // PROPERTIES TO EXIST
   // answer_id must exist as Integer (formerly id)
+  test('should output answer_id as an Integer', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answer_id', 420133);
+    expect(typeof result['answer_id']).toBe('number');
+  });
   // question_id must exist as Integer
+  test('should output question_id as an Integer', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('question_id', 215203);
+    expect(typeof result['question_id']).toBe('number');
+  });
   // answer_body must exist as String
+  test('should output answer_body as a String', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answer_body', 'Quia expedita repellat.');
+    expect(typeof result['answer_body']).toBe('string');
+  });
   // answer_date must exist as Date
+  test('should output answer_date as a Date', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answer_date');
+    expect(result['answer_date']).toBeInstanceOf(Date);
+  });
   // answerer_name must exist as String
+  test('should output answerer_name as a String', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answerer_name', 'Enola_Streich92');
+    expect(typeof result['answerer_name']).toBe('string');
+  });
   // answerer_email OPTIONAL
   // reported must exist as Boolean
+  test('should output reported as a Boolean', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('reported');
+    expect(typeof result.reported).toBe('boolean');
+  });
   // answer_helpfulness must exist as Integer,
+  test('should output answer_helpfulness as an Integer', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answer_helpfulness', 4);
+    expect(typeof result['answer_helpfulness']).toBe('number');
+  });
   // photos must exist as Array
+  test('should output photos as an Array', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('photos');
+    expect(Array.isArray(result.photos)).toBe(true);
+    expect(result.photos.length).toBe(0);
+  });
+  // when given no body, gives User in answer_body  // when no body, returns an empty object
+  test('should output an empty object if given no body', () => {
+    const noBody = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: '',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '4'
+    });
+    expect(noBody).toEqual({});
+  });
 
-  // when given no body, gives User in answer_body
-
-  // when given no date, gives generic date?
-
-  // when given no name, gives User
-
-  // when given no email, gives ''
+  // when given an empty asker_name, will turn into 'User'
+  test('should output User for asker_name if given no answerer_name', () => {
+    const noAnswererName = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: '',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '4'
+    });
+    expect(noAnswererName).toHaveProperty('answerer_name', 'User');
+  });
 
   // should have reported, which when given nothing becomes false
+  test('should output reported as false when given no value', () => {
+    const noReported = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '',
+      helpful: '4'
+    });
+    expect(noReported).toHaveProperty('reported', false);
+  });
 
   // reported when given a '1' becomes true
+  test('should output reported as true when given 1', () => {
+    const reportedOne = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '1',
+      helpful: '4'
+    });
+    expect(reportedOne).toHaveProperty('reported', true);
+  });
 
   // reported when given a '0' becomes false
+  test('should output reported as false when given 0', () => {
+    const reportedZero = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '4'
+    });
+    expect(reportedZero).toHaveProperty('reported', false);
+  });
 
-  // helpful becomes question_helpfulness
+  // question_helpfulness will be 0 when given nothing
+  test('should output question_helpfulness as a default of 0 when no value is given', () => {
+    const noHelpful = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: ''
+    });
+    expect(noHelpful).toHaveProperty('question_helpfulness', 0);
+  });
 
-  // this will be 0 when given nothing
+  // question_helpfulness becomes an Integer when given a string representation
+  test('should output question_helpfulness as an Integer when given a value', () => {
+    const helpful = parseQuestion({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '22'
+    });
+    expect(helpful).toHaveProperty('question_helpfulness', 22);
+    expect(typeof helpful['question_helpfulness']).toBe('number');
+  });
 
-  // helpful becomes an Integer when given a string representation
+  test('should output empty string if given no answerer_email', () => {
+    const result = parseAnswer({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '1616129260252',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: '',
+      reported: '0',
+      helpful: '22'
+    });
+    expect(result).toHaveProperty('answerer_email');
+  });
 
+  test('should output email if given answerer_email', () => {
+    const result = parseAnswer(answer);
+    expect(result).toHaveProperty('answerer_email', 'Enola_Streich92');
+  })
+
+  // when given no date, gives generic date?
+  test('should output current date if given no date', () => {
+    const result = parseAnswer({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '',
+      answerer_name: 'Enola_Streich92',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '22'
+    });
+    expect(result['answer_date']).toBeInstanceOf(Date);
+  });
+
+  // when given no name, gives User
+  test('should output User when given no answerer_name', () => {
+    const result = parseAnswer({
+      id: '420133',
+      question_id: '215203',
+      body: 'Quia expedita repellat.',
+      date_written: '',
+      answerer_name: '',
+      answerer_email: 'Damion.Hartmann@gmail.com',
+      reported: '0',
+      helpful: '22'
+    });
+    expect(result).toHaveProperty('answerer_name', 'User');
+  });
 });
 
 describe('parsePhoto', () => {

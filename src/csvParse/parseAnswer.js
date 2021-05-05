@@ -11,4 +11,4 @@ const parseAnswer = (answer = {}) => {
   // photos will be empty []
 }
 
-export default parseAnswer;
+module.exports = parseAnswer;

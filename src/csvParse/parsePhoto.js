@@ -4,4 +4,4 @@ const parsePhoto = (photo = {}) => {
   // url STRING
 };
 
-export default parsePhoto;
+module.exports = parsePhoto;
