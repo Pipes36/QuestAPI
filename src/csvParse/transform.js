@@ -1,37 +1,40 @@
 module.exports = {
-  questionID: (id = '') => {
-    if (!id) {
-      throw new Error('No ID Provided. Cannot create question_id');
+  id: (id = '') => {
+    if (!id && id !== 0) {
+      throw new Error('No ID Provided. Cannot create ID');
     }
     return Number(id);
   },
   productID: (id = '') => {
-    if (!id) {
+    if (!id && id !== 0) {
       throw new Error('No ID Provided. Cannot create product_id');
     }
     return id;
   },
-  questionBody: (body = '') => {
+  body: (body = '') => {
     if (!body) {
       return {};
     }
-    return body;
+    if (typeof body === 'string') return body;
+    if (typeof body !== 'string') return String(body);
   },
-  questionDate: (date) => {
+  date: (date) => {
     date = !date ? new Date() : date;
     return new Date (Date(date));
   },
-  askerName: (name = 'User') => {
+  name: (name = 'User') => {
     if (!name) {
       return 'User';
     }
-    return name;
+    if (typeof name === 'string') return name;
+    if (typeof name !== 'string') return String(name);
   },
-  askerEmail: (email) => {
+  email: (email) => {
     if (!email) {
       return '';
     }
-    return email;
+    if (typeof email === 'string') return email;
+    if (typeof email !== 'string') return '';
   },
   reported: (report) => {
     if (report === '1') {
@@ -39,32 +42,16 @@ module.exports = {
     }
     return false;
   },
-  questionHelpfulness: (score = 0) => {
+  helpfulness: (score = 0) => {
     return Number(score);
   },
   // ANSWERS -----------------------------------
-  answerID: () => {
-    // could consolidate into an ID method
+  photos: (photos) => {
+    return Array.isArray(photos) ? photos : [];
   },
-  answerBody: () => {
-    // could consolidate questionBody
-  },
-  answerDate: () => {
-    // Could consolidate questionDate
-  },
-  answererName: () => {
-    // could consolidate into asker_name
-  },
-  answererEmail: () => {
-    // could consolidate into askerEmail
-  },
-  reported: () => {
-    // could consolidate into reported
-  },
-  answerHelpfulness: () => {
-    // could be consolidated into querstionHelpfulness
-  },
-  photos: () => {
-
+  // PHOTOS ------------------------------------
+  url: (link) => {
+    if (!link) return null;
+    if (typeof link === 'string') return link;
   }
 }

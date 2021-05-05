@@ -1,7 +1,11 @@
+const transform = require('./transform.js');
+
 const parsePhoto = (photo = {}) => {
-  // id will become stay id value itself will be INTEGER
-  // answer_id will be used to look up answer to insert to photos key
-  // url STRING
+  return {
+    id: transform.id(photo.id),
+    'answer_id': transform.id(photo['answer_id']),
+    url: transform.url(photo.url)
+  }
 };
 
 module.exports = parsePhoto;

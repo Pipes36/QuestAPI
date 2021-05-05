@@ -1,14 +1,18 @@
+const transform = require('./transform.js');
+
 const parseAnswer = (answer = {}) => {
-  // id becomes the id within the answers obj INTEGER
-  // id also becomes answer_id => string => INTEGER
-  // question_id needs string => INTEGER for lookup and question_id comparison
-  // body becomes answer_body STRING
-  // date_written becomes answer_date string => Date
-  // answerer_name STRING
-  // answerer_email but can be STRING
-  // reported STRING 0||1||null => BOOLEAN
-  // helpful becomes answer_helpfulness string => INTEGER
-  // photos will be empty []
+  if (!answer.body) return {};
+  return {
+    'answer_id': transform.id(answer.id),
+    'question_id': transform.id(answer['question_id']),
+    'answer_body': transform.body(answer.body),
+    'answer_date': transform.date(answer['date_written']),
+    'answerer_name': transform.name(answer['answerer_name']),
+    'answerer_email': transform.email(answer['answerer_email']),
+    reported: transform.reported(answer.reported),
+    'answer_helpfulness': transform.helpfulness(answer.helpful),
+    photos: transform.photos(answer.photos)
+  }
 }
 
 module.exports = parseAnswer;

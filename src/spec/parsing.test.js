@@ -7,7 +7,7 @@ const parseAnswer = require('../csvParse/parseAnswer.js');
 const parsePhoto = require('../csvParse/parsePhoto.js');
 const parseQuestion = require('../csvParse/parseQuestion.js');
 
-xdescribe('Parsing CSV', () => {
+describe('Parsing CSV', () => {
   let testFilePath;
   beforeEach(() => {
     testFilePath = path.join(__dirname, '../dummyData');
@@ -122,7 +122,7 @@ xdescribe('Parsing CSV', () => {
   });
 });
 
-xdescribe('parseQuestion', () => {
+describe('parseQuestion', () => {
   let question;
 
   beforeEach(() => {
@@ -395,7 +395,7 @@ describe('parseAnswer', () => {
   });
   // when given no body, gives User in answer_body  // when no body, returns an empty object
   test('should output an empty object if given no body', () => {
-    const noBody = parseQuestion({
+    const noBody = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: '',
@@ -410,7 +410,7 @@ describe('parseAnswer', () => {
 
   // when given an empty asker_name, will turn into 'User'
   test('should output User for asker_name if given no answerer_name', () => {
-    const noAnswererName = parseQuestion({
+    const noAnswererName = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -425,7 +425,7 @@ describe('parseAnswer', () => {
 
   // should have reported, which when given nothing becomes false
   test('should output reported as false when given no value', () => {
-    const noReported = parseQuestion({
+    const noReported = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -440,7 +440,7 @@ describe('parseAnswer', () => {
 
   // reported when given a '1' becomes true
   test('should output reported as true when given 1', () => {
-    const reportedOne = parseQuestion({
+    const reportedOne = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -455,7 +455,7 @@ describe('parseAnswer', () => {
 
   // reported when given a '0' becomes false
   test('should output reported as false when given 0', () => {
-    const reportedZero = parseQuestion({
+    const reportedZero = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -470,7 +470,7 @@ describe('parseAnswer', () => {
 
   // question_helpfulness will be 0 when given nothing
   test('should output question_helpfulness as a default of 0 when no value is given', () => {
-    const noHelpful = parseQuestion({
+    const noHelpful = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -480,12 +480,12 @@ describe('parseAnswer', () => {
       reported: '0',
       helpful: ''
     });
-    expect(noHelpful).toHaveProperty('question_helpfulness', 0);
+    expect(noHelpful).toHaveProperty('answer_helpfulness', 0);
   });
 
   // question_helpfulness becomes an Integer when given a string representation
   test('should output question_helpfulness as an Integer when given a value', () => {
-    const helpful = parseQuestion({
+    const helpful = parseAnswer({
       id: '420133',
       question_id: '215203',
       body: 'Quia expedita repellat.',
@@ -495,8 +495,8 @@ describe('parseAnswer', () => {
       reported: '0',
       helpful: '22'
     });
-    expect(helpful).toHaveProperty('question_helpfulness', 22);
-    expect(typeof helpful['question_helpfulness']).toBe('number');
+    expect(helpful).toHaveProperty('answer_helpfulness', 22);
+    expect(typeof helpful['answer_helpfulness']).toBe('number');
   });
 
   test('should output empty string if given no answerer_email', () => {
@@ -515,7 +515,7 @@ describe('parseAnswer', () => {
 
   test('should output email if given answerer_email', () => {
     const result = parseAnswer(answer);
-    expect(result).toHaveProperty('answerer_email', 'Enola_Streich92');
+    expect(result).toHaveProperty('answerer_email', 'Damion.Hartmann@gmail.com');
   })
 
   // when given no date, gives generic date?
@@ -550,13 +550,38 @@ describe('parseAnswer', () => {
 });
 
 describe('parsePhoto', () => {
-
+  let photo;
+  beforeEach(() => {
+    photo = {
+      id: '1',
+      answer_id: '5',
+      url: "https://images.unsplash.com/photo-1530519729491-aea5b51d1ee1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1651&q=80"
+    };
+  });
   // id stays id but becomes an Integer
-
+  test('should output id as an Integer', () => {
+    const result = parsePhoto(photo);
+    expect(result).toHaveProperty('id', 1);
+  });
   // answer_id must exist as a valid number/string
-
-  // if url does not exist or is nullish or is empty string it gives a stock url
-
+  test('should output an answer_id as a String', () => {
+    const result = parsePhoto(photo);
+    expect(result).toHaveProperty('answer_id', 5);
+  });
   // url must exist as a String
+  test('should output a url as a String', () => {
+    const result = parsePhoto(photo);
+    expect(result).toHaveProperty('url');
+    expect(typeof result.url).toBe('string');
+  });
+
+  test('should output url as Null if not given a string', () => {
+    const result = parsePhoto({
+      id: '1',
+      answer_id: '5',
+      url: ''
+    });
+    expect(result.url).toBe(null);
+  });
 
 });
