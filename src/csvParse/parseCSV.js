@@ -1,8 +1,12 @@
 const fs = require('fs');
 const parse = require('csv-parse');
 const path = require('path');
+const parseAnswer = require('./parseAnswer');
+const parseQuestion = require('./parseQuestion');
+const parsePhoto = require('./parsePhoto');
 
 const parseCSV = (filePath, callback) => {
+  let documents = [];
   const readStream = fs.createReadStream(filePath);
   readStream.pipe(parse(
     { columns: true,
@@ -11,7 +15,7 @@ const parseCSV = (filePath, callback) => {
     }))
     .on('data', (results) => {
     readStream.pause()
-    callback(null, results)
+    callback(null, results);
     readStream.resume();
   }).on('error', (err) => {
     callback(new Error(err), null);
