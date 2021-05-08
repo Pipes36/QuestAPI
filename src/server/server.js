@@ -3,8 +3,8 @@ const express = require('express');
 const compression = require('compression');
 const logger = require('morgan');
 const cors = require('cors');
-const questionRoutes = require('../routes/questionRoutes.js');
-const answerRoutes = require('../routes/answerRoutes.js');
+const questionRoutes = require('./routes/questionRoutes.js');
+const answerRoutes = require('./routes/answerRoutes.js');
 
 const app = express();
 
