@@ -7,7 +7,7 @@ const init = require('./init.js')
 const { Question } = require('./model/schema.js');
 const { isEmpty } = require('lodash')
 
-mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, autoIndex: false })
+mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 
 const db = mongoose.connection;
 /* ----------------------------------------------------------------------------- */
@@ -21,13 +21,13 @@ db.on('error', (err) => {
   console.log(err)
   console.log('could not connect to database');
 })
-db.once('open', () => {
+db.once('open', async () => {
   console.log(`Successfully connected to DB at ${URI}`);
   //
   //  Below logic safeguards from unnecessary DB population
   //
-  const isDatabasePopulated = Question.find({});
-  if (isEmpty(isDatabasePopulated)) {
+  const collectionSearch = await db.db.listCollections().toArray()
+  if (isEmpty(collectionSearch)) {
     console.log('Initializing DB with Data');
     init();
   }
