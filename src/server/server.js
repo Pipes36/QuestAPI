@@ -1,7 +1,10 @@
+"use strict"
 const express = require('express');
 const compression = require('compression');
 const logger = require('morgan');
 const cors = require('cors');
+const questionRoutes = require('../routes/questionRoutes.js');
+const answerRoutes = require('../routes/answerRoutes.js');
 
 const app = express();
 
@@ -12,8 +15,7 @@ app.use(logger('tiny'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.sendStatus(200);
-});
+app.use('/api/qa/questions', questionRoutes);
+app.use('/api/qa/answers', answerRoutes)
 
 module.exports = app;

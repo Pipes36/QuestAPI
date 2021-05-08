@@ -1,3 +1,4 @@
+"use strict"
 const fs = require('fs');
 const path = require('path');
 const { Question, Photo } = require('../db/model/schema.js');
