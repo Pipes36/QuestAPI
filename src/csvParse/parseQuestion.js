@@ -1,3 +1,4 @@
+"use strict"
 const transform = require('./transform.js');
 
 const parseQuestion = (question = {}) => {
