@@ -8,8 +8,7 @@ const parseAnswer = (answer = {}) => {
 
   return {
     parent_question_id: transform.id(answer['question_id']),
-    // _id === answer_id
-    _id: transform.id(answer.id),
+    answer_id: transform.id(answer.id),
     answer_body: transform.body(answer.body),
     answer_date: transform.date(answer['date_written']),
     answerer_name: transform.name(answer['answerer_name']),
