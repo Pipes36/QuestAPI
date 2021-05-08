@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = {
   id: (id = '') => {
     if (!id && id !== 0) {
@@ -13,14 +15,17 @@ module.exports = {
   },
   body: (body = '') => {
     if (!body) {
-      return {};
+      throw new Error('No Body Provided. Handle this in Transformer')
     }
     if (typeof body === 'string') return body;
     if (typeof body !== 'string') return String(body);
   },
   date: (date) => {
-    date = !date ? new Date() : date;
-    return new Date (Date(date));
+    try {
+      return moment(Number(date)).format();
+    } catch (err) {
+      return new Date().toISOString();
+    }
   },
   name: (name = 'User') => {
     if (!name) {
@@ -43,6 +48,7 @@ module.exports = {
     return false;
   },
   helpfulness: (score = 0) => {
+    if (!score) return 0;
     return Number(score);
   },
   // ANSWERS -----------------------------------
