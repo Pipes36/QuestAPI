@@ -24,7 +24,7 @@ const answerSchema = new Schema({
     photo_id: Number,
     url: String
   }]
-})
+});
 
 const Answer = model('Answer', answerSchema);
 const Question = model('Question', questionSchema);
