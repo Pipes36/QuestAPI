@@ -11,8 +11,7 @@ const parsePhoto = require('../csvParse/parsePhoto.js');
 // ------------------------------------------------------- //
 // ------------------------------------------------------- //
 const init = () => {
-  // populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
-  populateDB.insertPhotos(path.join(__dirname, '../data/answers_photos.csv'), parsePhoto)
+  populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
 }
 
 module.exports = init;
