@@ -76,8 +76,7 @@ const populateDB = {
       }
 
       try {
-      // const resolvedAnswerQueries = await Question.bulkWrite(pendingAnswerQueries, { ordered: false })
-        const answersQueries = Answer.insertMany(docs, { ordered: false });
+        const answersQueries = await Answer.insertMany(docs, { ordered: false });
         if (++iteration % 1000 === 0) console.log(`Answers Iteration Count: ${iteration}`);
       } catch (err) {
         console.log('Insertion Error: continuing { ordered: false }');

@@ -5,6 +5,6 @@ module.exports = () => {
 
   return () => {
     const timeElapsed = Date.now() - startTime;
-    return moment.duration(timeElapsed).asMinutes;
+    return moment.duration(timeElapsed).asMinutes();
   }
 };
