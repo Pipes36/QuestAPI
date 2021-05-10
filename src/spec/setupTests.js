@@ -3,6 +3,16 @@ const Promise = require('bluebird');
 mongoose.promise = Promise;
 const { Question, Answer } = require('../db/model/schema.js')
 
+/*
+ *
+ *
+ *
+ * SETUP FOR ENDPOINTS.TEST.JS
+ *
+ *
+ *
+ */
+
 const removeAllCollections = async () => {
   const collections = Object.keys(mongoose.connection.collections);
   for (const collectionName of collections) {
@@ -25,7 +35,7 @@ module.exports = {
       await Question.createCollection();
       await Answer.createCollection();
 
-      for (let i = 0; i < 5; i++) {
+      for (let i = 1; i <= 5; i++) {
         await Question.create({
           product_id: `${i}`,
           question_id: i,
@@ -42,7 +52,7 @@ module.exports = {
           parent_question_id: i,
           answer_body: 'This is a test insertion for the Answer Collection',
           answer_date: '2011-10-05T14:48:00.000Z',
-          answerer_name: `Test User${i}`,
+          answerer_name: `Test User${i + i}`,
           reported: false,
           answer_helpfulness: 2,
           answerer_email: 'example@email.com',
@@ -52,17 +62,17 @@ module.exports = {
           }]
         });
       }
-
-      return [Question, Answer];
+      return;
     });
 
     // CLEAN UP DB AFTER EACH TEST
-    afterEach(async () => {
-      await removeAllCollections();
-    });
+    // afterEach(async () => {
+    //   await removeAllCollections();
+    // });
 
     // REMOVE ALL COLLECTIONS AND CLOSE CONNECTION
     afterAll(async () => {
+      await removeAllCollections();
       await dropDatabase();
       await mongoose.connection.close();
     });

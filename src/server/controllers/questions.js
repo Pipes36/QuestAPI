@@ -1,18 +1,53 @@
-
+const queries = require('../../db/controllers');
+const convertIdToNumber = require('../helpers/convertIdToNumber');
+const sanitizeInput = require('../helpers/sanitizeInput');
+const checkProductId = require('../helpers/sanitizeInput');
 
 module.exports = {
-  fetchQuestion: async (req, res) => {
-    // Add parsing for possible Page (default 1) and Count (default 5)
+  async getQuestion(req, res) {
     // { $and: [ { product_id: '1' }, { reported: false } ]  } -- need photos for answers
-    res.sendStatus(200);
+    try {
+      const product_id = checkProductId(req.headers.product_id);
+      // TODO: Sanitize Page and Count
+      const queryResult = await queries.findQuestions(product_id, req.headers.page, req.headers.count);
+      res.send(queryResult);
+    } catch (err) {
+      console.error(err);
+      res.status(404).send('Something went wrong! Could not retrieve the question.')
+    }
   },
-  createQuestion: async (req, res) => {
-    res.status(201).send('Question POST route works')
+
+  async createQuestion(req, res) {
+    try {
+      checkProductId(req.body.product_id);
+      const sanitizedInput = sanitizeInput(req.body);
+      await queries.addQuestion(sanitizedInput);
+      res.status(201).send('Successfully saved your question!');
+    } catch (err) {
+      console.error(err);
+      res.status(404).send('Something went wrong! Could not create your question.');
+    }
   },
-  updateQuestionHelpfulness: async (req, res) => {
-    res.status(204).send('Question PUT to mark as helpful works');
+
+  async updateQuestionHelpfulness(req, res) {
+    try {
+      const question_id = convertIdToNumber(req.params.question_id);
+      const questionHelpfulnessQuery = await queries.incrementQuestionHelpfulness(question_id);
+      res.sendStatus(204);
+    } catch (err) {
+      console.error(err);
+      res.status(404).send('Something went wrong! Check the sent parameters.');
+    }
   },
-  reportQuestion: async (req, res) => {
-    res.status(204).send('Question PUT to mark as report');
+
+  async updateQuestionReported(req, res) {
+    try {
+      const question_id = convertIdToNumber(req.params.question_id);
+      await queries.markQuestionReported(question_id);
+      res.sendStatus(204);
+    } catch (err) {
+      console.error(err);
+      res.status(404).send('Something went wrong! Check the sent parameters.');
+    }
   }
 }

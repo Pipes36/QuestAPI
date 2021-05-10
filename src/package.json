@@ -6,7 +6,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "nodemon ./server/start.js",
-    "test": "jest ./spec"
+    "test": "jest ./spec",
+    "endTest": "jest ./spec/endpoints.test.js"
   },
   "jest": {
     "testEnvironment": "node"
