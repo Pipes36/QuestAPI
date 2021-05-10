@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  quest-db:
+    container_name: quest-db
+    image: mongo
+    ports:
+      - 27018:27017
+    volumes:
+      - 'quest-db:/data/db'
+  app:
+    container_name: quest-api-app
+    restart: always
+    build: ./
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    links:
+      - quest-db
+volumes:
+  quest-db:
