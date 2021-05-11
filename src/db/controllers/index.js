@@ -4,14 +4,10 @@ const parseQuestion = require('../../csvParse/parseQuestion');
 
 module.exports = {
   async findQuestions(product_id, page = 0, count = 5) {
-    const matchingQuestions = await Question.find({ product_id }, { _id: 0 });
+    const matchingQuestions = await Question.find({ product_id }, { _id: 0 }).lean();
 
-    const transformedQuestions = matchingQuestions.reduce((accum, question) => {
-      question = question.toObject();
-      return [ ...accum, { ...question, answers: {} }]
-    }, []);
-
-    for (const question of transformedQuestions) {
+    for (const question of matchingQuestions) {
+      question.answers = {};
       const answers = await Answer.find(
         { parent_question_id: question.question_id },
         { _id: 0, parent_question_id: 0 }
@@ -22,7 +18,7 @@ module.exports = {
     }
     return {
       product_id,
-      results: transformedQuestions
+      results: matchingQuestions
     };
   },
 

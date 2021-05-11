@@ -5,7 +5,6 @@ const checkProductId = require('../helpers/sanitizeInput');
 
 module.exports = {
   async getQuestion(req, res) {
-    // { $and: [ { product_id: '1' }, { reported: false } ]  } -- need photos for answers
     try {
       const product_id = checkProductId(req.headers.product_id);
       // TODO: Sanitize Page and Count

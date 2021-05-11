@@ -9,14 +9,23 @@ const init = require('./init.js')
 const { Question } = require('./model/schema.js');
 const { isEmpty } = require('lodash')
 
+/* ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+/* ---------------PLEASE NOTE BELOW DB POPULATION LOGIC ------------------------ */
+/* ----------------------------------------------------------------------------- */
+/* ----------------------------------------------------------------------------- */
+
 const db = (async () => {
   try {
     console.log('running')
     await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
     console.log('Successfully Connected to DB')
     const connection = mongoose.connection;
+    //
+    //  Logic Below Safeguards DB Population
+    //
     const collectionSearch = await connection.db.listCollections().toArray();
-    console.log(collectionSearch)
     if (isEmpty(collectionSearch)) {
       console.log('Initializing DB with Data');
       init();
@@ -26,34 +35,5 @@ const db = (async () => {
     console.log('Error connecting to DB');
   }
 })();
-
-
-// const db = mongoose.connection;
-/* ----------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------- */
-/* ---------------PLEASE NOTE BELOW DB POPULATION LOGIC ------------------------ */
-/* ----------------------------------------------------------------------------- */
-/* ----------------------------------------------------------------------------- */
-// console.log(db)
-// db.then(() => {
-//   console.log(`Successfully connected to DB at ${URI}`);
-// }).catch((err) => console.log(err));
-
-// db.on('error', (err) => {
-//   console.log(err)
-//   console.log('could not connect to database');
-// })
-// db.once('open', async () => {
-//   console.log(`Successfully connected to DB at ${URI}`);
-  //
-  //  Below logic safeguards from unnecessary DB population
-  //
-  // const collectionSearch = await db.db.listCollections().toArray()
-  // if (isEmpty(collectionSearch)) {
-  //   console.log('Initializing DB with Data');
-  //   init();
-  // }
-// });
 
 module.exports = db;
