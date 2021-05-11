@@ -10,7 +10,7 @@ services:
   app:
     container_name: quest-api-app
     restart: on-failure
-    image: kennyctran/quest-api-take-2
+    build: ./
     ports:
       - 3000:3000
     volumes:
