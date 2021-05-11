@@ -9,8 +9,8 @@ services:
       - 'quest-db:/data/db'
   app:
     container_name: quest-api-app
-    restart: always
-    build: ./
+    restart: on-failure
+    image: kennyctran/quest-api-take-2
     ports:
       - 3000:3000
     volumes:
