@@ -13,7 +13,7 @@ const questionSchema = new Schema({
 
 const answerSchema = new Schema({
   answer_id: { type: Number, unique: true, index: true },
-  parent_question_id: Number,
+  parent_question_id: { type: Number, index: true },
   answer_body: String,
   answer_date: String,
   answerer_name: String,
