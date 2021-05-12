@@ -2,7 +2,7 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 mongoose.promise = Promise;
 require('dotenv').config();
-const URI = 'mongodb://quest-db:27017/Quest'
+const URI = process.env.MONGOOSE_URI;
 console.log(URI, 'LOOK HERE')
 
 const init = require('./init.js')
@@ -22,14 +22,16 @@ const db = (async () => {
     await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
     console.log('Successfully Connected to DB')
     const connection = mongoose.connection;
-    //
+    //  ---------------------------------------------------------------------------------
     //  Logic Below Safeguards DB Population
+    //  The line below should only be uncomment if you want to upload data to the DB
     //
-    const collectionSearch = await connection.db.listCollections().toArray();
-    if (isEmpty(collectionSearch)) {
-      console.log('Initializing DB with Data');
-      init();
-    }
+    // ------------------------------------------------------------------------------
+    // const collectionSearch = await connection.db.listCollections().toArray();
+    // if (isEmpty(collectionSearch)) {
+    //   console.log('Initializing DB with Data');
+    //   init();
+    // }
   } catch(err) {
     console.log(err);
     console.log('Error connecting to DB');
