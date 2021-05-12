@@ -1,3 +1,9 @@
 node_modules
 .env
 *.csv
+/data
+./data
+/data/*.csv
+answers_photos.csv
+answers.csv
+questions.csv
