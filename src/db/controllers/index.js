@@ -4,7 +4,8 @@ const parseQuestion = require('../../csvParse/parseQuestion');
 
 module.exports = {
   async findQuestions(product_id, page = 0, count = 5) {
-    const matchingQuestions = await Question.find({ product_id }, { _id: 0 }).lean();
+
+    const matchingQuestions = await Question.find({ product_id}).lean();
 
     for (const question of matchingQuestions) {
       question.answers = {};

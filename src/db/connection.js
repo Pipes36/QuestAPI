@@ -2,7 +2,8 @@ const Promise = require('bluebird');
 const mongoose = require('mongoose');
 mongoose.promise = Promise;
 require('dotenv').config();
-const URI = process.env.MONGOOSE_URI;
+// const URI = process.env.MONGOOSE_URI;
+const URI = 'mongodb://quest-db:27017/Quest'
 console.log(URI, 'LOOK HERE')
 
 const init = require('./init.js')
