@@ -9,7 +9,6 @@ services:
       - 'quest-db:/data/db'
   app:
     container_name: quest-api-app
-    restart: on-failure
     build: ./
     ports:
       - 3000:3000
