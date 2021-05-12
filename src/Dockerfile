@@ -1,9 +1,8 @@
 FROM node:14
 WORKDIR /app
-COPY . .
-COPY package.json package.json
-COPY yarn.lock yarn.lock
-RUN npm install
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn
+COPY . .
 EXPOSE 3000
-CMD ["yarn", "start"]
+CMD ["node", "./server/start.js"]
