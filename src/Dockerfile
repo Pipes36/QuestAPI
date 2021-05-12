@@ -1,8 +1,7 @@
 FROM node:14
 WORKDIR /app
 COPY package.json ./
-COPY yarn.lock ./
-RUN yarn
+RUN yarn install
 COPY . .
 EXPOSE 3000
 CMD ["node", "./server/start.js"]
