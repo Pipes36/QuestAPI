@@ -1,5 +1,8 @@
 const redis = require('redis');
-const client = redis.createClient();
+require('dotenv').config();
+const client = redis.createClient({
+  url: process.env.REDIS_URL
+});
 const Promise = require('bluebird');
 
 client.get = Promise.promisify(client.get);
