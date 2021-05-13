@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 mongoose.promise = Promise;
 require('dotenv').config();
 // const URI = process.env.MONGOOSE_URI;
-const URI = 'mongodb://quest-db:27017/Quest'
-console.log(URI, 'LOOK HERE')
+const URI = 'mongodb://quest-db:27017/Quest' // AWS
+console.log(URI, ': DB URI')
 
 const init = require('./init.js')
 const { Question } = require('./model/schema.js');
 const { isEmpty } = require('lodash')
+const cache = require('../cache/redis.js');
 
 /* ----------------------------------------------------------------------------- */
 /* ----------------------------------------------------------------------------- */
