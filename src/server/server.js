@@ -12,9 +12,7 @@ const app = express();
 app.use(cors());
 app.use(compression());
 app.use(logger('tiny'));
-// possibly express.raw
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/qa/questions', questionRoutes);
 app.use('/api/qa/answers', answerRoutes)

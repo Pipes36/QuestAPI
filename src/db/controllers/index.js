@@ -1,9 +1,15 @@
 const { Question, Answer } = require('../model/schema.js');
 const parseAnswer = require('../../csvParse/parseAnswer');
 const parseQuestion = require('../../csvParse/parseQuestion');
+const client = require('../../cache/redis.js');
 
 module.exports = {
   async findQuestions(product_id, page = 0, count = 5) {
+
+    if (await client.get(product_id) != null) {
+      console.log('Retrieving question from Redis cache');
+      return JSON.parse(await client.get(product_id));
+    }
 
     const matchingQuestions = await Question.find({ product_id}).lean();
 
@@ -17,25 +23,40 @@ module.exports = {
         question.answers[answer.answer_id] = answer;
       });
     }
-    return {
+
+    const responseResult = {
       product_id,
       results: matchingQuestions
     };
+
+    await client.set(product_id, JSON.stringify(responseResult), 'EX', 60);
+
+    return responseResult;
   },
 
   async findAnswers(question_id, page = 0, count = 5) {
     // TODO: page and count logic
+    if (await client.get(`question_id:${question_id}`)) {
+      console.log('Retrieving answer from Redis Cache');
+      return JSON.parse(await client.get(`question_id:${question_id}`));
+    }
+
     const queryResults = await Answer
       .find(
         {parent_question_id: question_id, reported: false },
         { _id: 0, parent_question_id: 0 })
       .sort({ answer_id: 1 });
-    return {
+
+    const responseResult = {
       question: String(question_id),
       page,
       count,
       results: queryResults
-    };
+    }
+
+    await client.set(`question_id:${question_id}`, JSON.stringify(responseResult), 'EX', 30);
+
+    return responseResult;
   },
 
   async addQuestion({ body, name, email, product_id }) {
