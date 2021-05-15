@@ -13,9 +13,10 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 ## Table of Contents
 1. [Automated Extract, Transform, and Load Process](#Automated-Extract-Transform-and-Load-Process)
-    * [Initializing The Database](#initializing-the-database--connectionjs-)
-    * [Initializing Function](#initializing-function--initjs-) 
-    * [Populating The DB](#Populating-The-DB--populateDBjs-)
+    * [Initializing The Database](#initializing-the-database-connectionjs)
+    * [Initializing Function](#initializing-function-initjs) 
+    * [Populating The DB](#Populating-The-DB-populateDBjs)
+    * [ETL Time](#ETL-Time)
 3. [Data Flow](#Data-Flow)
 4. [Endpoints](#Endpoints)
 
@@ -24,7 +25,7 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 QuestAPI includes an automated ETL process built-in.
 It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
 
-1. #### Initializing The Database < connection.js >
+1. #### Initializing The Database <connection.js>
 On initilization, QuestAPI will check the current connected Mongo instance for the required data, and invoke init() if it does not contain it.
 ```node
 const Promise = require('bluebird');
@@ -48,7 +49,7 @@ const db = (async () => {
   }
 })();
 ```
-2. #### Initializing Function < init.js >
+2. #### Initializing Function <init.js>
 Once it is verified that the data is not within the database, Init() is invoked, starting the ETL process.
 ```node
 const path = require('path');
@@ -59,7 +60,7 @@ const init = () => {
   populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
 }
 ```
-3. #### Populating The DB < populateDB.js >
+3. #### Populating The DB <populateDB.js>
 This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
 
 *PATTERN* :
@@ -118,10 +119,13 @@ This is first function of the ETL chain, but the next two functions follow the s
   },
 }
 ```
-4. #### ETL Stats
-The ETL process averages at 45 minutes for over 12 million rows of CSV. 
-It has a fastest time of 30 minutes, and a slowest of 60.
-The process works within the Memory constraints of the V8 engine.
+4. #### ETL Time
+
+Since this ETL process relies on the speed of Mongoose Queries resolving, optimizations are focused on the readStream and chunk-size to Query-speed comparisons.
+
+This process clocked in at an average of 45 minutes (with a fastest completion time of 30 minutes, and a slowest completion of 60 minutes).
+This process was run of over 12 million rows of CSV data.
+The times are taken from 7 iterations of this ETL process.
 
   ---
   
