@@ -21,8 +21,9 @@ Accessible and deplyed on a single AWS EC2 T2 micro (8 GiB) at: **52.15.73.97**
     * [Initializing Function](#initializing-function-initjs) 
     * [Populating The DB](#Populating-The-DB-populateDBjs)
     * [ETL Duration](#ETL-Duration)
-3. [Data Flow](#Data-Flow)
-4. [Endpoints](#Endpoints)
+3. [API Performance](#API-Performance)
+4. [Data Flow](#Data-Flow)
+5. [Endpoints](#Endpoints)
 
 
 # Automated Extract, Transform, and Load Process
@@ -131,9 +132,45 @@ This process clocked in at an average of 45 minutes (with a fastest completion t
 This process was run of over 12 million rows of CSV data.
 The times are taken from 7 iterations of this ETL process.
 
-  ---
+---
   
-## Data Flow
+
+# API Performance
+
+*LAST UPDATED* : 05/15/2021
+
+*FUTURE OPTIMIZATION* : Horizontal scaling and load-balancing. This is easily accompishable with the arcitecture of the service being containerized.
+
+The most significant optimization implemented after deployment was the addition of a Redis cache that operated with short expiration timers. I decided this in order to cache the most popular products. On page load, the Questions route would be the route that has a 100% chance of being called. Since this was the case, I wanted to focus on optimizing the most products that were the most popular, handling strong upticks in traffic.
+
+The results of the tests indicate that that was successful, but now we need to scale horizontally in order to handle varied requests.
+
+**all stress tests done with Loader.io on an AWS EC2 T2 Micro Instance**
+
+The most expensive route is to GET a question since it must also be populated with all of a single product's questions and answers, denormalized.
+
+
+These next two results are for repeated requests against the Questions at 500 clients per second.
+> Prior to Redis optimization
+![image](https://user-images.githubusercontent.com/74506521/118375111-3afeff80-b585-11eb-8d0c-9771e85d9d08.png)
+> After Redis optimization
+![image](https://user-images.githubusercontent.com/74506521/118374946-279f6480-b584-11eb-9c05-5914b8f791b8.png)
+
+As you can see, adding Redis caching decreased the response time to 2% of its original and in increase to 100% successful responses instead of the previous 21% success rate.
+
+--
+
+These next two results are for repeated requests against the Answer endpoint at 750 clients per second.
+> Prior to Redis optimization
+![image](https://user-images.githubusercontent.com/74506521/118375319-a3021580-b586-11eb-9557-4796f872b602.png)
+> After Redis optimization
+![image](https://user-images.githubusercontent.com/74506521/118375364-d17ff080-b586-11eb-8846-733b0f2d1714.png)
+
+The post-Redis optimized results show that we have a response time 1% of the original and nearly 100% of the possible successful repsonses completed.
+  
+---
+  
+# Data Flow
 1. Database Initializes with data
 2. Client sends GET request
 3. Server checks Redis cache which operates off of LRU timers
@@ -146,7 +183,7 @@ The times are taken from 7 iterations of this ETL process.
 
 ---
 
-## Endpoints
+# Endpoints
 **All example requests are made with SuperAgent**
 
 ### GET 52.15.73.97/api/qa/questions
