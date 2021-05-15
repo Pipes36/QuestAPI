@@ -12,17 +12,19 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 ---
 
 ## Table of Contents
-1. [Extract, Transform, Load](#Extract-Transform-Load)
-  * [Database Init](#Database-Init-<-connection.js->)
+1. [Automated Extract, Transform, and Load Process](#Automated-Extract-Transform-and-Load-Process)
+    * [Initializing The Database](#Initializing-The-Database)
+    * [Initializing Function](#Initializing-Function) 
+    * [Populating The DB](#Populating-The-DB)
 3. [Data Flow](#Data-Flow)
 4. [Endpoints](#Endpoints)
 
 
-# Extract, Transform, Load
+# Automated Extract, Transform, and Load Process
 QuestAPI includes an automated ETL process built-in.
 It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
 
-1. #### Database Init < connection.js >
+1. #### Initializing The Database < connection.js >
 On initilization, QuestAPI will check the current connected Mongo instance for the required data, and invoke init() if it does not contain it.
 ```node
 const Promise = require('bluebird');
@@ -46,7 +48,7 @@ const db = (async () => {
   }
 })();
 ```
-2. #### Init Function < init.js >
+2. #### Initializing Function < init.js >
 Once it is verified that the data is not within the database, Init() is invoked, starting the ETL process.
 ```node
 const path = require('path');
@@ -57,7 +59,7 @@ const init = () => {
   populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
 }
 ```
-3. #### Populating the DB < populateDB.js >
+3. #### Populating The DB < populateDB.js >
 This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
 
 *PATTERN* :
