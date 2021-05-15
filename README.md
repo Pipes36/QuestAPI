@@ -13,7 +13,8 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 ## Table of Contents
 1. [Extract, Transform, Load](#Extract-Transform-Load)
-2. [Endpoints](#Endpoints)
+2. [Data Flow](#Data-Flow)
+3. [Endpoints](#Endpoints)
 
 
 # Extract, Transform, Load
@@ -106,28 +107,20 @@ The ETL process averages at 45 minutes for over 12 million rows of CSV.
 It has a fastest time of 30 minutes, and a slowest of 60.
 The process works within the Memory constraints of the V8 engine.
 
-<!--
-  - [Node.js](https://nodejs.org/en/)
-  - [Bluebird](http://bluebirdjs.com/docs/getting-started.html)
-  - [Compression](http://expressjs.com/en/resources/middleware/compression.html)
-  - [cors](https://expressjs.com/en/resources/middleware/cors.html)
-  - [csv-parse](https://www.npmjs.com/package/csv-parse)
-  - [Express](https://expressjs.com/)
-  - [Lodash](https://lodash.com/)
-  - [Moment.js](https://momentjs.com/)
-  - [MongoDB](https://www.mongodb.com/)
-  - [Mongoose](https://mongoosejs.com/)
-  - [Morgan](https://www.npmjs.com/package/morgan)
-  - [Redis](https://redis.io/)
-  - [SuperAgent](https://visionmedia.github.io/superagent/)
-  - [Yarn](https://yarnpkg.com/)
-  - [Docker](https://www.docker.com/)
-  - [AWS EC2](https://aws.amazon.com/)
-  - [Loader.io](https://loader.io/)
-  - [Jest](https://jestjs.io/)
-  - [SuperTest](https://www.npmjs.com/package/supertest)
-  -->
   ---
+  
+## Data Flow
+1. Database Initializes with data
+2. Client sends GET request
+3. Server checks Redis cache which operates off of LRU timers
+4. If the requested information is within the Redis cache, return response to the Client
+5. If the requested information is not within the Redis cache, Query the Database
+6. Once the request returns from Mongo, add it to the Redis cache with an expiration timer
+7. Return the response to the Client
+
+![image](https://user-images.githubusercontent.com/74506521/118369317-b4d4c000-b568-11eb-92bc-f8d63fc537f9.png)
+
+---
 
 ## Endpoints
 **All example requests are made with SuperAgent**
