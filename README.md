@@ -21,8 +21,8 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 QuestAPI includes an automated ETL process built-in.
 It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
 
-1. #### Database Init (./db/connection.js)
-On initilization, QuestAPI will automatically begin the ETL process if data does not exist in Mongo.
+1. #### Database Init < connection.js >
+On initilization, QuestAPI will check the current connected Mongo instance for the required data, and invoke init() if it does not contain it.
 ```node
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
@@ -45,8 +45,8 @@ const db = (async () => {
   }
 })();
 ```
-2. #### Init Function (./db/init.js)
-If the data does not exist in the DB, init() will begin the ETL process.
+2. #### Init Function < init.js >
+Once it is verified that the data is not within the database, Init() is invoked, starting the ETL process.
 ```node
 const path = require('path');
 const populateDB = require('../csvParse/populateDB.js');
@@ -56,9 +56,21 @@ const init = () => {
   populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
 }
 ```
-3. #### Populating the DB (./csvParse/populateDb.js) { insertQuestions }
+3. #### Populating the DB < populateDB.js >
 This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
-Within each function, the data is pulled from the CSV files, parsed, transformed to match the database Schema, and then loaded into Mongo. Each function also includes a timer that logs at the end of the process. 
+
+*PATTERN* :
+1. Extract data from the CSV file in a readStream
+2. Transform the data to fit the Mongoose Schema
+3. Load the data into Mongo with Mongoose Queries
+4. Repeat
+
+* **IMPORTANT** : This implementation only moves as fast as Mongoose Queries can resolve, but it works within the constraints of the V8 engine's memory heap.
+
+* Each function also invokes timer() which is a HoF. The resulting function is invoked again at the end of the process, giving us the function duration.
+* For the transformations, we abstract that logic into separate functions that return the objects to be used by the Mongoose Query.
+* A log is also scheduled every 1000 queries for human sanity checks.
+* This implementation ignores insertion errors and continues on with { ordered: false }
 
 ```node
 {
