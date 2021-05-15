@@ -1,7 +1,7 @@
 # QuestAPI
 QuestAPI is a REST API that provides Question and Answers data to the Atelier E-Commerce platform.
 
-Accessible and deplyed at: **52.15.73.97**
+Accessible and deplyed on AWS at: **52.15.73.97**
 
 <img src=https://img.shields.io/badge/Code%20Coverage-77%25-yellowgreen/> 
 
