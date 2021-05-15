@@ -11,7 +11,7 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 
 ## Table of Contents
-1. [Extract, Transform, Load](#Extract,-Transform,-Load)
+1. [Extract, Transform, Load](#Extract-Transform-Load)
 2. [Endpoints](#Endpoints)
 
 
