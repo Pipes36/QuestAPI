@@ -13,9 +13,9 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 ## Table of Contents
 1. [Automated Extract, Transform, and Load Process](#Automated-Extract-Transform-and-Load-Process)
-    * [Initializing The Database](#Initializing-The-Database)
-    * [Initializing Function](#Initializing-Function) 
-    * [Populating The DB](#Populating-The-DB)
+    * [Initializing The Database](#Initializing-The-Database--connectionjs--)
+    * [Initializing Function](#initializing-function--initjs-) 
+    * [Populating The DB](#Populating-The-DB--populateDBjs--)
 3. [Data Flow](#Data-Flow)
 4. [Endpoints](#Endpoints)
 
