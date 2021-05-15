@@ -19,7 +19,7 @@ Accessible and deplyed on a single AWS EC2 T2 micro (8 GiB) at: **52.15.73.97**
     * [Initializing The Database](#initializing-the-database-connectionjs)
     * [Initializing Function](#initializing-function-initjs) 
     * [Populating The DB](#Populating-The-DB-populateDBjs)
-    * [ETL Time](#ETL-Time)
+    * [ETL Duration](#ETL-Duration)
 3. [Data Flow](#Data-Flow)
 4. [Endpoints](#Endpoints)
 
@@ -28,7 +28,7 @@ Accessible and deplyed on a single AWS EC2 T2 micro (8 GiB) at: **52.15.73.97**
 QuestAPI includes an automated ETL process built-in.
 It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
 
-1. #### Initializing The Database <connection.js>
+1. ### Initializing The Database <connection.js>
 On initilization, QuestAPI will check the current connected Mongo instance for the required data, and invoke init() if it does not contain it.
 ```node
 const Promise = require('bluebird');
@@ -52,7 +52,7 @@ const db = (async () => {
   }
 })();
 ```
-2. #### Initializing Function <init.js>
+2. ### Initializing Function <init.js>
 Once it is verified that the data is not within the database, Init() is invoked, starting the ETL process.
 ```node
 const path = require('path');
@@ -63,7 +63,7 @@ const init = () => {
   populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
 }
 ```
-3. #### Populating The DB <populateDB.js>
+3. ### Populating The DB <populateDB.js>
 This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
 
 *PATTERN* :
@@ -122,7 +122,7 @@ This is first function of the ETL chain, but the next two functions follow the s
   },
 }
 ```
-4. #### ETL Time
+4. ### ETL Duration
 
 Since this ETL process relies on the speed of Mongoose Queries resolving, optimizations are focused on the readStream and chunk-size to Query-speed comparisons.
 
