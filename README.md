@@ -13,8 +13,9 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 ## Table of Contents
 1. [Extract, Transform, Load](#Extract-Transform-Load)
-2. [Data Flow](#Data-Flow)
-3. [Endpoints](#Endpoints)
+  * [Database Init](#Database-Init-<-connection.js->)
+3. [Data Flow](#Data-Flow)
+4. [Endpoints](#Endpoints)
 
 
 # Extract, Transform, Load
@@ -60,13 +61,14 @@ const init = () => {
 This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
 
 *PATTERN* :
-1. Extract data from the CSV file in a readStream
+1. Extract data from the CSV file using a readStream
 2. Transform the data to fit the Mongoose Schema
 3. Load the data into Mongo with Mongoose Queries
 4. Repeat
 
 * **IMPORTANT** : This implementation only moves as fast as Mongoose Queries can resolve, but it works within the constraints of the V8 engine's memory heap.
 
+* Each chunk received from the stream is about 530 rows from the CSV.
 * Each function also invokes timer() which is a HoF. The resulting function is invoked again at the end of the process, giving us the function duration.
 * For the transformations, we abstract that logic into separate functions that return the objects to be used by the Mongoose Query.
 * A log is also scheduled every 1000 queries for human sanity checks.
