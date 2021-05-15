@@ -1,7 +1,9 @@
 # QuestAPI
 QuestAPI is a REST API that provides Question and Answers data to the Atelier E-Commerce platform.
 
-Accessible and deplyed on AWS at: **52.15.73.97**
+QuestAPI provides an automatic Extract, Tramsform and Load process for the required CSV data, which populates a Mongo instance without any need for manual user interaction. This, combined with tests covering 77% of the code base, and a simple straightforward API that interacts with Mongo and Redis instances which are containerized with Docker, means that the service is easily scalable both vertically and horizontally in the future.
+
+Accessible and deplyed on a single AWS EC2 T2 micro (8 GiB) at: **52.15.73.97**
 
 <img src=https://img.shields.io/badge/Code%20Coverage-77%25-yellowgreen/> 
 
