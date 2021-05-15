@@ -1,7 +1,105 @@
 # QuestAPI
-QuestAPI is the service that provides Question and Answers data to the Atelier E-Commerce platform.
+QuestAPI is a REST API that provides Question and Answers data to the Atelier E-Commerce platform.
 
-# Built With
+<img src=https://img.shields.io/badge/Code%20Coverage-77%25-yellowgreen/> 
+
+<img src="https://img.shields.io/badge/Runtime-Node.js-%23429643?logo=node.js"/> <img src="https://img.shields.io/badge/Database-MongoDB-%23429643?logo=mongodb"/> <img src="https://img.shields.io/badge/Caching-Redis-red?logo=redis"/> 
+
+<img src="https://img.shields.io/badge/Deployment-AWS%20EC2-%23EC912D?logo=amazon"/> <img src="https://img.shields.io/badge/Development-Docker-9cf?logo=docker"/> <img src="https://img.shields.io/badge/Testing-Jest-%23C2A812?logo=jest"/> <img src="https://img.shields.io/badge/Testing-SuperTest-important"/> <img src="https://img.shields.io/badge/Testing-Loader.io-%231A82E3?"/>
+
+
+# Extract, Transform, Load
+QuestAPI includes an automated ETL process built in.
+It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
+
+1. #### Database Init (./db/connection.js)
+On initilization, QuestAPI will automatically begin the ETL process if data does not exist in Mongo.
+```node
+const Promise = require('bluebird');
+const mongoose = require('mongoose');
+mongoose.promise = Promise;
+
+const db = (async () => {
+  try {
+    console.log('running')
+    await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+    console.log('Successfully Connected to DB'
+    const connection = mongoose.connection;
+    const collectionSearch = await connection.db.listCollections().toArray();
+      if (isEmpty(collectionSearch)) {
+       console.log('Initializing DB with Data');
+       init();
+      }
+    return connection;
+  } catch(err) {
+    console.log(err);
+    console.log('Error connecting to DB');
+  }
+})();
+```
+2. #### Init Function (./db/init.js)
+If the data does not exist in the DB, init() will begin the ETL process.
+```node
+const path = require('path');
+const populateDB = require('../csvParse/populateDB.js');
+const parseQuestion = require('../csvParse/parseQuestion.js');
+
+const init = () => {
+  populateDB.insertQuestions(path.join(__dirname, '../data/questions.csv'), parseQuestion);
+}
+```
+3. #### Populating the DB (./csvParse/populateDb.js) { insertQuestions }
+This is first function of the ETL chain, but the next two functions follow the same pattern as this one.
+Within each function, the data is pulled from the CSV files, parsed, transformed to match the database Schema, and then loaded into Mongo. Each function also includes a timer that logs at the end of the process. 
+
+```node
+{
+  insertQuestions: async (filePath, transformer) => {
+    const startTime = timer();
+    console.log('STEP 1/3: INSERT QUESTIONS')
+    let firstLineRead = false;
+    let columns = '';
+    let iteration = 0;
+    const questionReadStream = fs.createReadStream(filePath, {encoding: 'utf8'});
+
+    questionReadStream.on('data', async (res) => {
+
+      questionReadStream.pause();
+      let docs = [];
+
+      if (!firstLineRead) {
+        columns = determineColumns(res);
+        docs = transformRowsIntoObjects('', res, transformer);
+        firstLineRead = true;
+      } else {
+        docs = transformRowsIntoObjects(columns, res, transformer);
+      }
+      try {
+        const insertionQuery = await Question.insertMany(docs, { ordered: false });
+        if (++iteration % 1000 === 0) console.log(`Questions Iteration Count: ${iteration}`);
+      } catch (err) {
+        console.log('Insertion Error: continuing { ordered: false }');
+      }
+      
+      questionReadStream.resume();
+      
+    });
+    questionReadStream.on('error', (err) => {
+      console.log(err);
+    });
+    questionReadStream.on('end', () => {
+      console.log(`INSERT QUESTIONS ENDING. TIME ELAPSED: ${startTime()}`)
+      populateDB.insertAnswers(path.join(__dirname, '../data/answers.csv'), parseAnswer) // Continue Population
+    });
+  },
+}
+```
+4. #### ETL Stats
+The ETL process averages at 45 minutes for over 12 million rows of CSV. 
+It has a fastest time of 30 minutes, and a slowest of 60.
+The process works within the Memory constraints of the V8 engine.
+
+<!--
   - [Node.js](https://nodejs.org/en/)
   - [Bluebird](http://bluebirdjs.com/docs/getting-started.html)
   - [Compression](http://expressjs.com/en/resources/middleware/compression.html)
@@ -21,8 +119,10 @@ QuestAPI is the service that provides Question and Answers data to the Atelier E
   - [Loader.io](https://loader.io/)
   - [Jest](https://jestjs.io/)
   - [SuperTest](https://www.npmjs.com/package/supertest)
+  -->
+  ---
 
-## API Routes / Usage
+## Endpoints
 **All example requests are made with SuperAgent**
 
 ### GET 52.15.73.97/api/qa/questions
