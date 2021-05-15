@@ -23,7 +23,6 @@ mongoose.promise = Promise;
 
 const db = (async () => {
   try {
-    console.log('running')
     await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
     console.log('Successfully Connected to DB'
     const connection = mongoose.connection;
