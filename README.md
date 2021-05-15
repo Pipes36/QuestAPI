@@ -11,7 +11,7 @@ Accessible and deplyed at: **52.15.73.97**
 
 
 # Extract, Transform, Load
-QuestAPI includes an automated ETL process built in.
+QuestAPI includes an automated ETL process built-in.
 It uses the Node.js Fs module as well as the Mongoose ODM to populate a Mongo database.
 
 1. #### Database Init (./db/connection.js)
