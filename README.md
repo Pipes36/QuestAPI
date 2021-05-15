@@ -9,6 +9,7 @@ Accessible and deplyed on AWS at: **52.15.73.97**
 
 <img src="https://img.shields.io/badge/Deployment-AWS%20EC2-%23EC912D?logo=amazon"/> <img src="https://img.shields.io/badge/Development-Docker-9cf?logo=docker"/> <img src="https://img.shields.io/badge/Testing-Jest-%23C2A812?logo=jest"/> <img src="https://img.shields.io/badge/Testing-SuperTest-important"/> <img src="https://img.shields.io/badge/Testing-Loader.io-%231A82E3?"/>
 
+---
 
 ## Table of Contents
 1. [Extract, Transform, Load](#Extract-Transform-Load)
