@@ -1,7 +1,7 @@
 # QuestAPI
 QuestAPI is a REST API that provides Question and Answers data to the Atelier E-Commerce platform.
 
-QuestAPI provides an automatic Extract, Tramsform and Load process for the required CSV data, which populates a Mongo instance without any need for manual user interaction. 
+QuestAPI provides an automatic Extract, Transform and Load process for the required CSV data, which populates a Mongo instance without any need for manual user interaction. 
 
 That process, combined with tests covering 77% of the code base, and a simple straightforward API that interacts with Mongo and Redis instances which are containerized with Docker, means that the service is easily scalable both vertically and horizontally in the future.
 
