@@ -129,7 +129,7 @@ This is first function of the ETL chain, but the next two functions follow the s
 Since this ETL process relies on the speed of Mongoose Queries resolving, optimizations are focused on the readStream and chunk-size to Query-speed comparisons.
 
 This process clocked in at an average of 45 minutes (with a fastest completion time of 30 minutes, and a slowest completion of 60 minutes).
-This process was run of over 12 million rows of CSV data.
+This process was run on over 12 million rows of CSV data.
 The times are taken from 7 iterations of this ETL process.
 
 ---
