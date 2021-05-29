@@ -5,8 +5,6 @@ QuestAPI provides an automatic Extract, Transform and Load process for the requi
 
 That process, combined with tests covering 77% of the code base, and a simple straightforward API that interacts with Mongo and Redis instances which are containerized with Docker, means that the service is easily scalable both vertically and horizontally in the future.
 
-Accessible and deplyed on a single AWS EC2 T2 micro (8 GiB) at: **52.15.73.97**
-
 <img src=https://img.shields.io/badge/Code%20Coverage-77%25-yellowgreen/> 
 
 <img src="https://img.shields.io/badge/Runtime-Node.js-%23429643?logo=node.js"/> <img src="https://img.shields.io/badge/Database-MongoDB-%23429643?logo=mongodb"/> <img src="https://img.shields.io/badge/Caching-Redis-red?logo=redis"/> 
@@ -186,7 +184,7 @@ The post-Redis optimized results show that we have a response time 1% of the ori
 # Endpoints
 **All example requests are made with SuperAgent**
 
-### GET 52.15.73.97/api/qa/questions
+### GET /api/qa/questions
 Retrieves a list of questions for the requested product, not including reported questions.
 
 Header | Type | Description
@@ -257,7 +255,7 @@ const res = await request.get('/api/qa/questions').set('product_id', '1');
 }
 ```
 ---
-### GET 52.15.73.97/api/qa/questions/:question_id/answers
+### GET /api/qa/questions/:question_id/answers
 Returns answers for a given question, not including reported answers.
 
 Parameter | Type | Description
@@ -313,7 +311,7 @@ const res = await request.get('/api/qa/questions/1/answers');
 }
 ```
 ---
-### POST 52.15.73.97/api/qa/questions
+### POST /api/qa/questions
 Creates a question for the specified product.
 
 Body Parameters
@@ -334,7 +332,7 @@ const res = await request.post('/api/qa/questions')
 > Response: Status 201 Created
 
 ---
-### POST 52.15.73.97/api/qa/questions/:question_id/answers
+### POST /api/qa/questions/:question_id/answers
 Creates an answer for the specified question.
 
 Parameters
@@ -361,7 +359,7 @@ photos | \[String\] | List of photo urls
 > Response: Status 201 Created
 
 ---
-### PUT 52.15.73.97/api/qa/questions/:question_id/helpful
+### PUT /api/qa/questions/:question_id/helpful
 Adds to the helpfulness count of a specified question.
 
 Parameter | Type | Description
@@ -373,7 +371,7 @@ const res = await request.put('/api/qa/questions/1/helpful');
 ```
 > Response: Status 204 No Content
 ---
-### PUT 52.15.73.97/api/qa/questions/:question_id/report
+### PUT /api/qa/questions/:question_id/report
 Reports a question.
 
 Parameter | Type | Description
@@ -384,7 +382,7 @@ const res = await request.put('/api/qa/questions/1/report');
 ```
 > Response: Status 204 No Content
 ---
-### PUT 52.15.73.97/api/qa/answers/:answer_id/helpful
+### PUT /api/qa/answers/:answer_id/helpful
 Adds to the helpfulness count of a specified answer.
 
 Parameter | Type | Description
@@ -395,7 +393,7 @@ const res = await request.put('/api/qa/answers/2/helpful');
 ```
 > Response: Status 204 No Content
 ---
-### PUT 52.15.73.97/api/qa/answers/:answer_id/report
+### PUT /api/qa/answers/:answer_id/report
 Reports an answer.
 
 Parameter | Type | Description
